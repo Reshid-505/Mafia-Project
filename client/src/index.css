@@ -1,0 +1,32 @@
+/* Reset */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  color: rgba(255, 255, 255, 0.87);
+}
+/* Body */
+body{
+  background-color: #212529;
+}
+/* Header */
+header{
+  display: flex;
+  justify-content: center;
+}
+header #logo{
+  height: 70px;
+}
+/* Lobby */
+.lobby{
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+.lobby button{
+  min-width: 120px;
+  background-color:#091E2E;
+}
