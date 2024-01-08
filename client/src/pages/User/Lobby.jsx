@@ -5,6 +5,7 @@ import MainContext from "../../services/contexts/MainContext"
 import CreateRoom from "../../components/CreateRoom"
 function Lobby() {
   const {showAddRoomModal} = useContext(MainContext)
+  
   return (
     <>
       <div className="lobby">

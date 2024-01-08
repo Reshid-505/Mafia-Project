@@ -1,14 +1,27 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { getAllRooms } from "../../services/api/roomRequests"
 import { Skeleton, Input,  Row, Col } from 'antd';
 import RoomCard from "../../components/RoomCard";
+import MainContext from "../../services/contexts/MainContext";
+
 
 function Rooms() {
-  const { Search } = Input;
+  let {socket} = useContext(MainContext)
   let [roomsData,setRoomsData] = useState([])
   let [filteredRoomsData,setFilteredRoomsData] = useState([])
   let [isLoaded,setIsLoaded] = useState(false)
 
+  
+
+  useEffect(()=>{
+    if(socket){
+      socket.on("getRooms",(roomsData)=>{
+        setRoomsData(roomsData)
+        setFilteredRoomsData(roomsData)
+        setIsLoaded(true)
+      })
+    }
+  },[socket])
   useEffect(()=>{
     getAllRooms()
     .then((data)=>{
@@ -17,6 +30,7 @@ function Rooms() {
       setIsLoaded(true)
     })
   },[])
+
   return (
     <>
     <div className="container">
@@ -26,7 +40,7 @@ function Rooms() {
       <div className="container">
         <Row  gutter={20}>
           {filteredRoomsData.map((roomData,idx)=>
-          <Col key={idx} style={{marginTop:"30px"}} sm={24}  md={12} xl={6} >
+          <Col key={idx} style={{marginTop:"30px"}} xs={24} sm={24}  md={12} xl={6} >
             <RoomCard roomData={roomData} />
           </Col>
           )}
@@ -36,19 +50,19 @@ function Rooms() {
     (<>
         <div className="container">
           <Row  gutter={20}>
-            <Col style={{marginTop:"30px"}} sm={24}  md={12} xl={6} >
+            <Col style={{marginTop:"30px"}} xs={24} sm={24}  md={12} xl={6} >
               <Skeleton active />
             </Col>
             
-            <Col style={{marginTop:"30px"}} sm={24}  md={12} xl={6} >
+            <Col style={{marginTop:"30px"}} xs={24} sm={24}  md={12} xl={6} >
               <Skeleton active />
             </Col>
             
-            <Col style={{marginTop:"30px"}} sm={24}  md={12} xl={6} >
+            <Col style={{marginTop:"30px"}} xs={24} sm={24}  md={12} xl={6} >
               <Skeleton active />
             </Col>
 
-            <Col style={{marginTop:"30px"}} sm={24}  md={12} xl={6} >
+            <Col style={{marginTop:"30px"}} xs={24} sm={24}  md={12} xl={6} >
               <Skeleton active />
             </Col>
           </Row>

@@ -1,25 +1,42 @@
 import { Modal, Form, Button, Input, Select } from 'antd';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import MainContext from '../services/contexts/MainContext';
-import { addRoom } from '../services/api/roomRequests';
+import { useNavigate } from "react-router-dom"
+
 function CreateRoom() {
-    const {isAddRoomModalOpen,setIsAddRoomModalOpen,handleAddRoomCancel,handleAddRoomOk} = useContext(MainContext)
-    const { Option } = Select;
-    const onFinish = (values) => {
-        let roomParams={
-          roomName:values.roomName,
-          roomPassword:values.roomPassword,
-          maxPlayer:values.maxPlayer
-        }
-        addRoom(roomParams)
-        .then((data)=>{
-          console.log(data);
-          setIsAddRoomModalOpen(false)
-        })
+  const {isAddRoomModalOpen,socket,setIsAddRoomModalOpen,handleAddRoomCancel,handleAddRoomOk} = useContext(MainContext)
+  const { Option } = Select;
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(socket){
+      const handleRoomID = (roomID) => {
+        console.log(`roomID: ${roomID}`);
+        setIsAddRoomModalOpen(false);
+        navigate("/room/" + roomID);
       };
-      const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+  
+      socket.on("roomID", handleRoomID);
+  
+      return () => {
+        socket.off("roomID", handleRoomID);
       };
+    }
+  }, [socket, setIsAddRoomModalOpen, navigate]);
+
+  
+  const onFinish = (values) => {
+      let roomParams={
+        roomName:values.roomName,
+        roomPassword:values.roomPassword,
+        maxPlayer:values.maxPlayer
+      }
+      socket.emit("addRoom",roomParams)
+
+    };
+    const onFinishFailed = (errorInfo) => {
+      console.log('Failed:', errorInfo);
+    };
   return (
     <>
         <Modal destroyOnClose={true} title="Basic Modal" open={isAddRoomModalOpen} onOk={handleAddRoomOk} onCancel={handleAddRoomCancel} footer={null}>
